@@ -49,29 +49,24 @@ Chassis chassis(
 );
 
 Assembly assembly(
-	mik::motor_group({
-		mik::motor(PORT6, true, green_18_1, "left_lift_motor"),
-		mik::motor(PORT7, false, green_18_1, "right_lift_motor")
-	}),
-
-	mik::motor(PORT16, false, blue_6_1, "intake_motor"),
-	vex::rotation(PORT11),
-	mik::piston(PORT_A)
+    mik::motor(PORT4, false, blue_6_1, "intake_motor"),
+    mik::motor(PORT5, false, blue_6_1, "scoring_motor"),
+    mik::piston(PORT_A),
+    mik::piston(PORT_B)
 );
 
 /** Allows UI to display all motor values */
 void log_motors() {
-    config_add_motors({
-		// Add all mik motor groups in here
-		chassis.left_drive, 
-		chassis.right_drive, 
-		assembly.lift_arm_motors
-    }, 
-	{
-		// Add all mik motors in here
-		assembly.intake_motor
-    }
-  );
+    config_add_motors(
+        {
+            chassis.left_drive,
+            chassis.right_drive
+        },
+        {
+            assembly.intakeMotor,
+            assembly.scoringMotor
+        }
+    );
 }
 
 void calibrate_inertial(void) {
