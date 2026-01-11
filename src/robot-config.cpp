@@ -50,10 +50,11 @@ Chassis chassis(
 
 Assembly assembly(
     mik::motor(PORT4, false, blue_6_1, "intake_motor"),
-    mik::motor(PORT5, false, blue_6_1, "scoring_motor"),
-    mik::piston(PORT_A),
-    mik::piston(PORT_B)
+    mik::motor(PORT6, false, blue_6_1, "scoring_motor"),
+    mik::piston(PORT_B),  // now middleGoalPiston is B
+    mik::piston(PORT_A)   // now armPiston is A
 );
+
 
 /** Allows UI to display all motor values */
 void log_motors() {
