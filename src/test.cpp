@@ -5,6 +5,7 @@ using namespace mik;
 
 void relative_mode_constants() {
   	default_constants();
+	chassis.set_drive_constants(10, 0, 0, 0, 0);
 }
 
 void odom_mode_constants() {

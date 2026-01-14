@@ -31,7 +31,7 @@ void Assembly::intake_motor_control() {
         intakeMotor.spin(fwd, 12, volt);   // L1 & R1 = forward
     }
     else if (Controller.ButtonL2.pressing() || Controller.ButtonR2.pressing()) {
-        intakeMotor.spin(reverse, 12, volt); // L2 & R2 = reverse
+        intakeMotor.spin(fwd, 12, volt); // L2 & R2 = reverse
     }
     else {
         intakeMotor.stop(brakeType::coast);
@@ -41,22 +41,12 @@ void Assembly::intake_motor_control() {
 
 
 void Assembly::scoring_motor_control() {
-    // l1 / l2 (unchanged)
     if (Controller.ButtonL1.pressing()) {
         scoringMotor.spin(reverse, 12, volt);
     }
     else if (Controller.ButtonL2.pressing()) {
         scoringMotor.spin(fwd, 12, volt);
     }
-
-    // L1 / L2
-    else if (Controller.ButtonL1.pressing()) {
-        scoringMotor.spin(fwd, 12, volt);     // L1 (unchanged)
-    }
-    else if (Controller.ButtonL2.pressing()) {
-        scoringMotor.spin(reverse, 12, volt); // L2 FIXED (reversed)
-    }
-
     else {
         scoringMotor.stop(brakeType::coast);
     }

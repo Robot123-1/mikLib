@@ -7,15 +7,16 @@ void default_constants(void) {
     chassis.set_control_constants(5, 10, 1.019, 5, 10, 1.019);
 
     // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-    chassis.set_turn_constants(12, .437, .0215, 3.686, 15);
-    chassis.set_drive_constants(10, 1.5, 0, 10, 0);
-    chassis.set_heading_constants(6, .4, 0, 1, 0);
+    chassis.set_turn_constants(12, .275, 0.012, 5.805, 15);
+    chassis.set_drive_constants(10, .822, 0.003, 2.462, 0);
+    chassis.set_heading_constants(6, 0.921, 0.026, 7.648, 0);
     chassis.set_swing_constants(12, .437, .0295, 3.486, 15);
 
     // Each exit condition set is in the form of (settle_error, settle_time, timeout).
     chassis.set_turn_exit_conditions(1.5, 75, 2000);
     chassis.set_drive_exit_conditions(1, 75, 3000);
     chassis.set_swing_exit_conditions(1.25, 75, 3000);
+
 }
 
 void odom_constants(void) {
@@ -49,8 +50,10 @@ std::string template_auto(bool calibrate, auto_variation var, bool get_name) {
     }
     
     /* We now run the auto */ 
-    chassis.drive_distance(10);
-    chassis.drive_distance(-10);
+    chassis.drive_distance(24);
+    task::sleep(500);
+    chassis.drive_distance(-24);
+    task::sleep(500);
 
     return "";
 }
@@ -167,13 +170,31 @@ std::string red_left_elim(bool calibrate, auto_variation var, bool get_name) {
 std::string red_right_winpoint(bool calibrate, auto_variation var, bool get_name) { 
     if (get_name) { return "red right winpoint"; }
     if (calibrate) {
+        odom_constants();
         chassis.set_coordinates(0, 0, 0);
-        
-        return "";
-    }
+    return "";
+}
+
+    chassis.turn_to_point(0, 12);
+    wait(5, sec);
+    chassis.drive_to_point(0, 12);
+    wait(5, sec);
+    chassis.turn_to_point(0, 0);
+    wait(5, sec);
+    chassis.drive_to_point(0, 0);
+    wait(5, sec);
+    chassis.turn_to_point(0, 1);
+    
+   
+
+
+
+
 
     return "";
 }
+
+
 std::string red_right_sawp(bool calibrate, auto_variation var, bool get_name) {
     if (get_name) { return "red right sawp"; }
     if (calibrate) {
