@@ -5,7 +5,11 @@ using namespace mik;
 
 void relative_mode_constants() {
   	default_constants();
-	chassis.set_drive_constants(10, 0, 0, 0, 0);
+	// Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
+	chassis.set_turn_constants(12, .275, 0.012, 5.805, 15);
+    chassis.set_drive_constants(10, 1.427, 0, 7.000, .0);
+    chassis.set_heading_constants(6, 0.921, 0.026, 7.648, 0);
+    chassis.set_swing_constants(12, .437, .0295, 3.486, 15);
 }
 
 void odom_mode_constants() {

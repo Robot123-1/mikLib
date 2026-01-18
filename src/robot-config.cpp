@@ -36,9 +36,9 @@ Chassis chassis(
 
     PORT1, // Forward Tracker Port
     -3.25,     // Forward Tracker wheel diameter in inches (negative flips direction)
-    0.5,      // Forward Tracker center distance in inches (a positive distance corresponds to a tracker on the right side of the robot, negative is left)
+    0.875,      // Forward Tracker center distance in inches (a positive distance corresponds to a tracker on the right side of the robot, negative is left)
 
-    PORT19,  // Sideways tracker port
+    PORT19,  // Sideways tracker brport
     2,       // Sideways tracker wheel diameter in inches (negative flips direction)
     2,     // Sideways tracker center distance in inches (positive distance is behind the center of the robot, negative is in front)
 
@@ -51,8 +51,10 @@ Chassis chassis(
 Assembly assembly(
     mik::motor(PORT4, false, blue_6_1, "intake_motor"),
     mik::motor(PORT6, false, blue_6_1, "scoring_motor"),
-    mik::piston(PORT_B),  // now middleGoalPiston is B
-    mik::piston(PORT_A)   // now armPiston is A
+    mik::piston(PORT_B, true),  // middleGoalPiston starts UP (true = open)
+    mik::piston(PORT_A),   // armPiston is A
+    mik::piston(PORT_C, true),   // matchLoaderPiston starts UP/PULLED (true = open)
+    mik::piston(PORT_D)   // odomPodLifter is D
 );
 
 

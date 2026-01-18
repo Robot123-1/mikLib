@@ -8,7 +8,7 @@ void default_constants(void) {
 
     // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
     chassis.set_turn_constants(12, .275, 0.012, 5.805, 15);
-    chassis.set_drive_constants(10, .908, 0.100, 2.300, 0);
+    chassis.set_drive_constants(10, 1.427, 0, 8.000, .0);
     chassis.set_heading_constants(6, 0.921, 0.026, 7.648, 0);
     chassis.set_swing_constants(12, .437, .0295, 3.486, 15);
 
@@ -129,6 +129,7 @@ std::string blue_right_sawp(bool calibrate, auto_variation var, bool get_name) {
 std::string blue_right_elim(bool calibrate, auto_variation var, bool get_name) {
     if (get_name) { return "blue right elim"; }
     if (calibrate) {
+        odom_constants();
         chassis.set_coordinates(0, 0, 0);
 
         return "";
@@ -171,20 +172,34 @@ std::string red_right_winpoint(bool calibrate, auto_variation var, bool get_name
     if (get_name) { return "red right winpoint"; }
     if (calibrate) {
         odom_constants();
-        chassis.set_coordinates(0, 0, 0);
+        chassis.set_coordinates(-39.221, 0, 270);
+        assembly.middleGoalPiston.close();
     return "";
 }
-
-    chassis.turn_to_point(0, 12);
-    wait(5, sec);
-    chassis.drive_to_point(0, 12);
-    wait(5, sec);
-    chassis.turn_to_point(0, 0);
-    wait(5, sec);
-    chassis.drive_to_point(0, 0);
-    wait(5, sec);
-    chassis.turn_to_point(0, 1);
+    assembly.middleGoalPiston.close();
+    chassis.turn_to_point(-24.708,-21.877, {.angle_offset = 180});
+    assembly.intakeMotor.spin(fwd, 12, volt);
+    chassis.drive_to_point(-24.708,-21.877, {.max_voltage = 3});
+    assembly.intakeMotor.stop();
+    chassis.turn_to_point(-47.428, -47.128, {.angle_offset = 180});
+    chassis.drive_to_point(-47.428, -47.128, {.max_voltage = 4});
+    chassis.turn_to_point(-18.437, -46.514);
+    chassis.drive_to_point(-18.437, -46.514, {.max_voltage = 5, .timeout = 2000});
+    assembly.intakeMotor.spin(fwd, 12, volt);
+    assembly.scoringMotor.spin(reverse, 12, volt);
+    wait (3.3, sec);
+    assembly.scoringMotor.stop();
+    chassis.turn_to_point(-72.095, -46.917, {.angle_offset = 180});
+    assembly.matchLoaderPiston.close();
+    chassis.drive_to_point(-72.095, -46.917, {.max_voltage = 8.8, .timeout = 1500});
+    wait (0.5, sec);
+    chassis.turn_to_point(-17.989, -45.618);
+    chassis.drive_to_point(-17.989, -45.618, {.max_voltage = 4, .timeout = 5000});
+    assembly.scoringMotor.spin(reverse, 12, volt);
     
+
+
+
    
 
 
@@ -219,10 +234,43 @@ std::string red_right_elim(bool calibrate, auto_variation var, bool get_name) {
 std::string skills(bool calibrate, auto_variation var, bool get_name) {
     if (get_name) { return "skills"; }
     if (calibrate) {
-        chassis.set_coordinates(0, 0, 0);
-
+        odom_constants();
+        chassis.set_coordinates(-39.266, 0, 90);
         return "";
     }
-
+    assembly.middleGoalPiston.close();
+    chassis.turn_to_point(-22.917, 23.812, {.angle_offset = 180});
+    assembly.intakeMotor.spin(fwd, 12, volt);
+    chassis.drive_to_point(-22.917, 23.812, {.max_voltage = 3});
+    chassis.turn_to_point(-46.82, 46.698, {.angle_offset = 180});
+    chassis.drive_to_point(-46.82, 46.698);
+    chassis.turn_to_point(-24.727, 46.997);
+    chassis.drive_to_point(-24.727, 46.997, {.max_voltage = 6, .timeout = 3000});
+    assembly.scoringMotor.spin(reverse, 12, volt);
+    wait (3,sec);
+    chassis.turn_to_point(-46.82, 46.698, {.angle_offset = 180});
+    chassis.drive_to_point(-46.82, 46.698, {.max_voltage = 8});
+    chassis.turn_to_point(-73.54, 46.698, {.angle_offset = 180});
+    assembly.intakeMotor.spin(fwd, 12, volt);
+    assembly.matchLoaderPiston.close();
+    wait (1, sec);
+    chassis.drive_to_point(-73.54, 46.698, {.max_voltage = 8, .timeout = 3000});
+    chassis.drive_to_point(-57.184, 46.657, {.max_voltage = 1.2});
+    wait (4, sec);
+    //match loading
+    chassis.turn_to_point(-46.82, 46.698);
+    chassis.drive_to_point(-46.82, 46.698, {.max_voltage = 3});
+    chassis.turn_to_point(-24.727, 46.997);
+    chassis.drive_to_point(-24.727, 46.997, {.max_voltage = 8, .timeout = 5000});
+    assembly.scoringMotor.spin(reverse, 12, volt);
+    assembly.matchLoaderPiston.open();
+    wait (5, sec);
+    //scored in long goal
+    chassis.turn_to_point(-54.183, 46.774, {.angle_offset = 180});
+    chassis.drive_to_point(-54.183, 46.774, {.max_voltage = 7});
+    chassis.turn_to_point(-60.392, 19.872);
+    chassis.drive_to_point(-60.392, 19.872, {.max_voltage = 7});
+    //lift odom pods
+    //need to use motor encoders from here
     return "";
 }

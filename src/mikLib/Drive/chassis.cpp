@@ -294,7 +294,7 @@ void Chassis::tank_curved() {
 
 void Chassis::control(drive_mode dm) {
     if (control_disabled) { 
-        chassis.stop_drive(coast);
+        chassis.stop_drive(brake);
         return;
     }
     selected_drive_mode = dm;
