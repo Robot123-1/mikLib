@@ -3,67 +3,105 @@
 using namespace vex;
 
 Assembly::Assembly(
-    mik::motor intakeMotor,
-    mik::motor scoringMotor,
-    mik::piston middleGoalPiston,
+    mik::motor scoreMotor1,
+    mik::motor scoreMotor2,
     mik::piston armPiston,
-    mik::piston matchLoaderPiston,
-    mik::piston odomPodLifter
+    mik::piston goalPiston1,
+    mik::piston goalPiston2,
+    mik::piston matchLoaderPiston
 ) :
-    intakeMotor(intakeMotor),
-    scoringMotor(scoringMotor),
-    middleGoalPiston(middleGoalPiston),
+    scoreMotor1(scoreMotor1),
+    scoreMotor2(scoreMotor2),
     armPiston(armPiston),
-    matchLoaderPiston(matchLoaderPiston),
-    odomPodLifter(odomPodLifter)
+    goalPiston1(goalPiston1),
+    goalPiston2(goalPiston2),
+    matchLoaderPiston(matchLoaderPiston)
 {
 }
 
 void Assembly::init() {
-    // Optional one-time setup
+    set_goal_state(GoalState::LongGoal);
 }
 
 void Assembly::control() {
-    intake_motor_control();
-    scoring_motor_control();
-    middle_goal_piston_control();
+    score_motor_control();
+    goal_state_control();
     arm_piston_control();
     match_loader_piston_control();
-    odom_pod_lifter_control();
 }
 
-void Assembly::intake_motor_control() {
-    if (Controller.ButtonL1.pressing() || Controller.ButtonR1.pressing() || Controller.ButtonL2.pressing()) {
-        intakeMotor.spin(fwd, 12, volt);   // L1, R1 & L2 = forward
+void Assembly::score_motor_control() {
+    const int DOUBLE_PRESS_THRESHOLD = 300; // milliseconds
+
+    bool nowR1 = Controller.ButtonR1.pressing();
+    bool nowR2 = Controller.ButtonR2.pressing();
+    bool nowL1 = Controller.ButtonL1.pressing();
+    bool nowL2 = Controller.ButtonL2.pressing();
+    // R2 double-press-and-hold reverse
+    if (nowR2 && !lastR2_) {
+        int timeSinceLastPress = r2_press_timer_.time();
+        r2_reverse_mode_ = (timeSinceLastPress < DOUBLE_PRESS_THRESHOLD);
+        r2_press_timer_.reset();
     }
-    else if (Controller.ButtonR2.pressing()) {
-        intakeMotor.spin(reverse, 12, volt); // R2 = reverse
+
+    if (nowR2) {
+        spin_score_motors(r2_reverse_mode_ ? reverse : fwd, 9);
+    }
+    else if (nowR1 || nowL1 || nowL2) {
+        spin_score_motors(fwd, 12);
     }
     else {
-        intakeMotor.stop(brakeType::coast);
+        stop_score_motors(brakeType::coast);
+        r2_reverse_mode_ = false;
     }
+
+    lastR2_ = nowR2;
 }
 
 
 
-void Assembly::scoring_motor_control() {
+void Assembly::goal_state_control() {
     if (Controller.ButtonL1.pressing()) {
-        scoringMotor.spin(reverse, 12, volt);
+        set_goal_state(GoalState::LongGoal);
+    }
+    else if (Controller.ButtonL2.pressing()) {
+        set_goal_state(GoalState::MidGoal);
     }
     else {
-        scoringMotor.stop(brakeType::coast);
+        set_goal_state(GoalState::BallLock);
     }
 }
 
+void Assembly::set_goal_state(GoalState state) {
+    goal_state_ = state;
 
-
-void Assembly::middle_goal_piston_control() {
-    static bool lastA = false;
-    bool nowA = Controller.ButtonA.pressing();
-    if (nowA && !lastA) {
-        middleGoalPiston.toggle();
+    switch (goal_state_) {
+        case GoalState::LongGoal:
+            // both closed
+            goalPiston1.close();
+            goalPiston2.close();
+            break;
+        case GoalState::BallLock:
+            // one up, one down (goal1 up, goal2 down)
+            goalPiston1.open();
+            goalPiston2.close();
+            break;
+        case GoalState::MidGoal:
+        default:
+            // both up
+            goalPiston1.open();
+            goalPiston2.open();
+            break;
     }
-    lastA = nowA;
+}
+
+void Assembly::match_loader_piston_control() {
+    if (Controller.ButtonR1.pressing()) {
+        matchLoaderPiston.open();
+    }
+    else {
+        matchLoaderPiston.close();
+    }
 }
 
 void Assembly::arm_piston_control() {
@@ -75,26 +113,12 @@ void Assembly::arm_piston_control() {
     lastY = nowY;
 }
 
-void Assembly::match_loader_piston_control() {
-    if (Controller.ButtonL2.pressing()) {
-        matchLoaderPiston.close();
-    }
-    else {
-        matchLoaderPiston.open();
-    }
+void Assembly::spin_score_motors(directionType dir, double voltage) {
+    scoreMotor1.spin(dir, voltage, volt);
+    scoreMotor2.spin(dir, voltage, volt);
 }
 
-void Assembly::odom_pod_lifter_control() {
-    static bool lastRight = false;
-    bool nowRight = Controller.ButtonRight.pressing();
-    if (nowRight && !lastRight) {
-        odomPodLifter.toggle();
-    }
-    lastRight = nowRight;
-}
-
-void Assembly::intake_motors_control() {
-    // Keep this only if your header still declares it.
-    // For a single intake motor, just call the single-motor function:
-    intake_motor_control();
+void Assembly::stop_score_motors(brakeType brake) {
+    scoreMotor1.stop(brake);
+    scoreMotor2.stop(brake);
 }

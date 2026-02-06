@@ -6,31 +6,43 @@ using namespace vex;
 
 class Assembly {
 public:
+    enum class GoalState {
+        LongGoal,
+        BallLock,
+        MidGoal
+    };
+
     Assembly(
-        mik::motor intakeMotor,
-        mik::motor scoringMotor,
-        mik::piston middleGoalPiston,
+        mik::motor scoreMotor1,
+        mik::motor scoreMotor2,
         mik::piston armPiston,
-        mik::piston matchLoaderPiston,
-        mik::piston odomPodLifter
+        mik::piston goalPiston1,
+        mik::piston goalPiston2,
+        mik::piston matchLoaderPiston
     );
 
     void init();
     void control();
 
-    void intake_motor_control();
-    void scoring_motor_control();
-    void intake_motors_control();
-    void middle_goal_piston_control();
+    void score_motor_control();
+    void goal_state_control();
+    void set_goal_state(GoalState state);
+    void spin_score_motors(vex::directionType dir, double voltage);
+    void stop_score_motors(vex::brakeType brake = vex::brakeType::coast);
     void arm_piston_control();
     void match_loader_piston_control();
-    void odom_pod_lifter_control();
 
     // Hardware
-    mik::motor intakeMotor;
-    mik::motor scoringMotor;
-    mik::piston middleGoalPiston;
+    mik::motor scoreMotor1;
+    mik::motor scoreMotor2;
     mik::piston armPiston;
+    mik::piston goalPiston1;
+    mik::piston goalPiston2;
     mik::piston matchLoaderPiston;
-    mik::piston odomPodLifter;
+
+private:
+    GoalState goal_state_ = GoalState::LongGoal;
+    vex::timer r2_press_timer_;
+    bool lastR2_ = false;
+    bool r2_reverse_mode_ = false;
 };

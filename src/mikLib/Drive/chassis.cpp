@@ -173,7 +173,7 @@ float Chassis::get_SidewaysTracker_position() {
 }
 
 void Chassis::position_track() {
-    while(1) {
+    while (1) {
         odom.update_position(get_ForwardTracker_position(), get_SidewaysTracker_position(), get_absolute_heading());
         vex::task::sleep(5);
     }

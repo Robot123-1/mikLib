@@ -31,30 +31,30 @@ Chassis chassis(
 		mik::motor(PORT13, false, blue_6_1, "right_back_motor")
     }),
 
-    PORT2, // Inertia sensor port
-    357.6,    // Inertial scale, value that reads after turning robot a full 360
+    PORT15, // Inertia sensor port
+    357.87,    // Inertial scale, value that reads after turning robot a full 360
 
-    PORT1, // Forward Tracker Port
-    -3.25,     // Forward Tracker wheel diameter in inches (negative flips direction)
-    0.875,      // Forward Tracker center distance in inches (a positive distance corresponds to a tracker on the right side of the robot, negative is left)
+    PORT3, // Forward Tracker Port
+    2.75,     // Forward Tracker wheel diameter in inches (negative flips direction)
+    0.56,      // Forward Tracker center distance in inches (a positive distance corresponds to a tracker on the right side of the robot, negative is left)
 
-    PORT19,  // Sideways tracker brport
+    PORT18,  // Sideways tracker brport
     2,       // Sideways tracker wheel diameter in inches (negative flips direction)
-    2,     // Sideways tracker center distance in inches (positive distance is behind the center of the robot, negative is in front)
+    1.75,     // Sideways tracker center distance in inches (positive distance is behind the center of the robot, negative is in front)
 
     mik::distance_reset({
 		// A distance sensor that is mounted on the front of the robot and is offset by 5 inches to the right and 3.5 inches forward from the tracking center 
-		//mik::distance(PORT17, rear_sensor, 5, 3.5)
+		mik::distance(PORT20, front_sensor, 5, 3.5)
     })
 );
 
 Assembly assembly(
-    mik::motor(PORT4, false, blue_6_1, "intake_motor"),
-    mik::motor(PORT6, false, blue_6_1, "scoring_motor"),
-    mik::piston(PORT_B, true),  // middleGoalPiston starts UP (true = open)
+	mik::motor(PORT4, true, blue_6_1, "scoreMotor1"),
+	mik::motor(PORT6, false, blue_6_1, "scoreMotor2"),
     mik::piston(PORT_A),   // armPiston is A
-    mik::piston(PORT_C, true),   // matchLoaderPiston starts UP/PULLED (true = open)
-    mik::piston(PORT_D)   // odomPodLifter is D
+	mik::piston(PORT_B, false),  // goalPiston1 is B
+	mik::piston(PORT_D, false),  // goalPiston2 is D
+	mik::piston(PORT_C, false)   // matchLoaderPiston starts UP/PULLED (true = open)
 );
 
 
@@ -66,8 +66,8 @@ void log_motors() {
             chassis.right_drive
         },
         {
-            assembly.intakeMotor,
-            assembly.scoringMotor
+			assembly.scoreMotor1,
+			assembly.scoreMotor2
         }
     );
 }
