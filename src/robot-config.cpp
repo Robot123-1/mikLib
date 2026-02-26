@@ -21,26 +21,26 @@ static const float MINIMUN_INERTIAL_CALIBRATION_ERROR = .05;
 Chassis chassis(
     // Drivetrain motors
     mik::motor_group({
-		mik::motor(PORT10, true, blue_6_1, "left_front_motor"), 
-		mik::motor(PORT9, true, blue_6_1, "left_middle_motor"), 
-		mik::motor(PORT8, true, blue_6_1, "left_back_motor")
+		mik::motor(PORT1, true, blue_6_1, "left_front_motor"), 
+		mik::motor(PORT2, true, blue_6_1, "left_middle_motor"), 
+		mik::motor(PORT3, true, blue_6_1, "left_back_motor")
     }),
     mik::motor_group({
-		mik::motor(PORT11, false, blue_6_1, "right_front_motor"), 
-		mik::motor(PORT12, false, blue_6_1, "right_middle_motor"), 
-		mik::motor(PORT13, false, blue_6_1, "right_back_motor")
+		mik::motor(PORT9, false, blue_6_1, "right_front_motor"), 
+		mik::motor(PORT8, false, blue_6_1, "right_middle_motor"), 
+		mik::motor(PORT7, false, blue_6_1, "right_back_motor")
     }),
 
-    PORT15, // Inertia sensor port
+    PORT10, // Inertia sensor port
     357.87,    // Inertial scale, value that reads after turning robot a full 360
 
-    PORT3, // Forward Tracker Port
+	PORT5, // Forward Tracker Port
     2.75,     // Forward Tracker wheel diameter in inches (negative flips direction)
     0.56,      // Forward Tracker center distance in inches (a positive distance corresponds to a tracker on the right side of the robot, negative is left)
 
     PORT18,  // Sideways tracker brport
     2,       // Sideways tracker wheel diameter in inches (negative flips direction)
-    1.75,     // Sideways tracker center distance in inches (positive distance is behind the center of the robot, negative is in front)
+    2.03,     // Sideways tracker center distance in inches (positive distance is behind the center of the robot, negative is in front)
 
     mik::distance_reset({
 		// A distance sensor that is mounted on the front of the robot and is offset by 5 inches to the right and 3.5 inches forward from the tracking center 
@@ -54,7 +54,8 @@ Assembly assembly(
     mik::piston(PORT_A),   // armPiston is A
 	mik::piston(PORT_B, false),  // goalPiston1 is B
 	mik::piston(PORT_D, false),  // goalPiston2 is D
-	mik::piston(PORT_C, false)   // matchLoaderPiston starts UP/PULLED (true = open)
+	mik::piston(PORT_C, false),  // matchLoaderPiston starts UP/PULLED (true = open)
+	mik::piston(PORT_E, false)   // odomLiftPiston is E
 );
 
 

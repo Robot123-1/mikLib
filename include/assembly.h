@@ -18,7 +18,8 @@ public:
         mik::piston armPiston,
         mik::piston goalPiston1,
         mik::piston goalPiston2,
-        mik::piston matchLoaderPiston
+        mik::piston matchLoaderPiston,
+        mik::piston odomLiftPiston
     );
 
     void init();
@@ -31,6 +32,7 @@ public:
     void stop_score_motors(vex::brakeType brake = vex::brakeType::coast);
     void arm_piston_control();
     void match_loader_piston_control();
+    void odom_lift_piston_control();
 
     // Hardware
     mik::motor scoreMotor1;
@@ -39,6 +41,7 @@ public:
     mik::piston goalPiston1;
     mik::piston goalPiston2;
     mik::piston matchLoaderPiston;
+    mik::piston odomLiftPiston;
 
 private:
     GoalState goal_state_ = GoalState::LongGoal;

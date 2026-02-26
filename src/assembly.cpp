@@ -8,14 +8,16 @@ Assembly::Assembly(
     mik::piston armPiston,
     mik::piston goalPiston1,
     mik::piston goalPiston2,
-    mik::piston matchLoaderPiston
+    mik::piston matchLoaderPiston,
+    mik::piston odomLiftPiston
 ) :
     scoreMotor1(scoreMotor1),
     scoreMotor2(scoreMotor2),
     armPiston(armPiston),
     goalPiston1(goalPiston1),
     goalPiston2(goalPiston2),
-    matchLoaderPiston(matchLoaderPiston)
+    matchLoaderPiston(matchLoaderPiston),
+    odomLiftPiston(odomLiftPiston)
 {
 }
 
@@ -28,6 +30,7 @@ void Assembly::control() {
     goal_state_control();
     arm_piston_control();
     match_loader_piston_control();
+    odom_lift_piston_control();
 }
 
 void Assembly::score_motor_control() {
@@ -78,18 +81,18 @@ void Assembly::set_goal_state(GoalState state) {
     switch (goal_state_) {
         case GoalState::LongGoal:
             // both closed
-            goalPiston1.close();
+            goalPiston1.open();
             goalPiston2.close();
             break;
         case GoalState::BallLock:
             // one up, one down (goal1 up, goal2 down)
-            goalPiston1.open();
+            goalPiston1.close();
             goalPiston2.close();
             break;
         case GoalState::MidGoal:
         default:
             // both up
-            goalPiston1.open();
+            goalPiston1.close();
             goalPiston2.open();
             break;
     }
@@ -111,6 +114,15 @@ void Assembly::arm_piston_control() {
         armPiston.toggle();
     }
     lastY = nowY;
+}
+
+void Assembly::odom_lift_piston_control() {
+    if (Controller.ButtonDown.pressing()) {
+        odomLiftPiston.open();
+    }
+    else {
+        odomLiftPiston.close();
+    }
 }
 
 void Assembly::spin_score_motors(directionType dir, double voltage) {

@@ -136,7 +136,7 @@ void UI_auton_screen::exit_auton_task() {
             enable_user_control();
             auton_scr->end_card = false;
         }
-        if (btnB_new_press(Controller.ButtonB.pressing())) {
+        if (btnA_new_press(Controller.ButtonA.pressing())) {
             if (!auton_scr->auto_running) {
                 auton_scr->restart_controller_overlay();
                 disable_user_control(true);
@@ -740,12 +740,12 @@ void UI_auton_screen::restart_controller_overlay() {
                 if (auton_scr->cursor_position.second > 0) {
                     auton_scr->cursor_position.second--;
                 }
-            } else if (btnA_new_press(Controller.ButtonA.pressing())) {
+            } else if (btnB_new_press(Controller.ButtonB.pressing())) {
                 UI_select_scr(auton_scr->get_auton_screen());
                 int r = auton_scr->cursor_position.first;
                 int c = auton_scr->cursor_position.second;
                 auton_scr->control_panel[r][c].push();
-            } else if (btnB_new_press(Controller.ButtonB.pressing())) {
+            } else if (btnA_new_press(Controller.ButtonA.pressing())) {
                 auton_scr->controller_selector_scr();
             } else if (Controller.ButtonX.pressing()
                 // || std::abs(deadband(vex::controller(vex::primary).Axis1.value(), 15)) > 0
