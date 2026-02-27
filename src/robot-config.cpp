@@ -32,7 +32,7 @@ Chassis chassis(
     }),
 
     PORT10, // Inertia sensor port
-    357.87,    // Inertial scale, value that reads after turning robot a full 360
+    360,    // Inertial scale, value that reads after turning robot a full 360
 
 	PORT5, // Forward Tracker Port
     2.75,     // Forward Tracker wheel diameter in inches (negative flips direction)
@@ -43,8 +43,8 @@ Chassis chassis(
     2.03,     // Sideways tracker center distance in inches (positive distance is behind the center of the robot, negative is in front)
 
     mik::distance_reset({
-		// A distance sensor that is mounted on the front of the robot and is offset by 5 inches to the right and 3.5 inches forward from the tracking center 
-		mik::distance(PORT20, front_sensor, 5, 3.5)
+		// A distance sensor that is mounted on the front of the robot and is offset by 5 inches to the right and 4 inches forward from the tracking center 
+		mik::distance(PORT20, front_sensor, 5, 4)
     })
 );
 

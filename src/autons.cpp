@@ -197,35 +197,20 @@ std::string red_left_winpoint(bool calibrate, auto_variation var, bool get_name)
     chassis.disable_mirroring();
     if (get_name) { return "red left winpoint"; }
     if (calibrate) {
-        chassis.set_coordinates(-46.62, 6.89, 269.99);
+        chassis.set_coordinates(-45.7, 7.021, 270);
 
         return "";
     }
         odom_constants();
-        chassis.turn_to_point(-21.798, 22.278, {.angle_offset = 180});
         assembly.spin_score_motors(fwd, 12);
-        chassis.drive_to_point(-21.798, 22.278, {.max_voltage = 6});
-        assembly.matchLoaderPiston.open();
-        wait(1.2, sec);
-        assembly.spin_score_motors(fwd, 10);
-        assembly.matchLoaderPiston.close();
-        chassis.turn_to_point(-7.628, 9.625);
-        chassis.drive_to_point(-7.628, 9.625, {.max_voltage = 5});
-        assembly.spin_score_motors(fwd, 10);
+        chassis.turn_to_point(-21.781, 23.606, {.angle_offset = 180});
+        chassis.drive_to_point(-21.781, 23.606, {.max_voltage = 8});
+        chassis.turn_to_point(-5.4, 11.103);
+        chassis.drive_to_point(-5.4, 11.103, {.timeout = 3000, .max_voltage = 7});
         assembly.set_goal_state(Assembly::GoalState::MidGoal);
-        wait(1.3, sec);
-        assembly.set_goal_state(Assembly::GoalState::BallLock);
-        assembly.spin_score_motors(fwd, 8);
-        chassis.turn_to_point(-47.221, 45.167, {.angle_offset = 180});
-        chassis.drive_to_point(-47.221, 45.167, {.max_voltage = 9});
-        chassis.turn_to_point(-61.835, 47.846, {.angle_offset = 180});
-        assembly.matchLoaderPiston.open();
-        chassis.drive_to_point(-61.835, 47.846, {.max_voltage = 7, .timeout = 965});
-        chassis.turn_to_point(-24.717, 47.111);
-        chassis.drive_to_point(-24.717, 47.111, {.max_voltage = 7, .timeout = 1250});
-        assembly.spin_score_motors(fwd, 12);
-        assembly.set_goal_state(Assembly::GoalState::LongGoal);
         wait(2, sec);
+        assembly.set_goal_state(Assembly::GoalState::BallLock);
+
     return "";
 }
 std::string red_left_sawp(bool calibrate, auto_variation var, bool get_name) { 
@@ -256,33 +241,8 @@ std::string red_right_winpoint(bool calibrate, auto_variation var, bool get_name
     return "";
 }
     odom_constants();
-    chassis.turn_to_point(-21.798, -22.278, {.angle_offset = 180});
-    assembly.spin_score_motors(fwd, 12);
-    chassis.drive_to_point(-21.798, -22.278, {.max_voltage = 6});
-    assembly.matchLoaderPiston.open();
-    wait(.5, sec);
-    assembly.spin_score_motors(fwd, 7);
-    assembly.matchLoaderPiston.close();
-    chassis.turn_to_point(-47.244, -45.167, {.angle_offset = 180});
-    chassis.drive_to_point(-47.244, -45.167, {.max_voltage = 9});
-    wait(.5, sec);
-    chassis.turn_to_point(-24.728, -46.829);
-    chassis.drive_to_point(-24.728, -46.829, {.max_voltage = 8, .timeout = 670});
-    assembly.spin_score_motors(fwd, 12);
-    assembly.set_goal_state(Assembly::GoalState::LongGoal);
-    wait(2, sec);
-    assembly.set_goal_state(Assembly::GoalState::BallLock);
-    assembly.spin_score_motors(fwd, 8);
-    chassis.turn_to_point(-47.244, -45.167, {.angle_offset = 180});
-    chassis.drive_to_point(-47.244, -45.167, {.max_voltage = 7});
-    assembly.matchLoaderPiston.open();
-    chassis.turn_to_point(-61.162, -45.167, {.angle_offset = 180});
-    chassis.drive_to_point(-61.162, -45.167, {.max_voltage = 7, .timeout = 790});
-    chassis.turn_to_point(-24.728, -46.829);
-    chassis.drive_to_point(-24.728, -46.829, {.max_voltage = 8, .timeout = 990});
-    assembly.spin_score_motors(fwd, 12);
-    assembly.set_goal_state(Assembly::GoalState::LongGoal);
-    wait(4, sec);
+    
+
     return "";
 }
 
@@ -333,21 +293,51 @@ std::string skills(bool calibrate, auto_variation var, bool get_name) {
     if (get_name) { return "skills"; }
     if (calibrate) {
         odom_constants();
-        chassis.set_coordinates(-46.537, 9, 0.814);
+        chassis.set_coordinates(-46.537, -8, 0.814);
         return "";
     }
     chassis.turn_to_point(-47.329, -45, {.angle_offset = 180});
     chassis.drive_to_point(-47.329, -45, {.max_voltage = 9});
     assembly.matchLoaderPiston.open();
-    chassis.turn_to_point(-59, -46, {.angle_offset = 180});
+    chassis.turn_to_point(-59, -44.5, {.angle_offset = 180});
     assembly.spin_score_motors(fwd, 12);
-    chassis.drive_to_point(-59, -46, {.max_voltage = 7.6, .timeout = 4000});
-    wait(2.3, sec);
+    chassis.drive_to_point(-59, -44.5, {.max_voltage = 6, .timeout = 3000});
+    wait(1.5, sec);
+    //matchloading first tube
     chassis.turn_to_point(-25.3, -60.73);
     chassis.drive_to_point(-25.3, -60.73, {.max_voltage = 9});
+    assembly.matchLoaderPiston.close();
     chassis.turn_to_point(43.386, -61.028);
     chassis.drive_to_point(43.386, -61.028, {.max_voltage = 9});
-   
+    //distance sensor reset
+    chassis.reset_axis(front_sensor, right_wall, 20);
+    chassis.turn_to_point(42.439, -49.118);
+    chassis.drive_to_point(42.439, -49.118, {.max_voltage = 7});
+    chassis.turn_to_point(27.2, -48.166);
+    chassis.drive_to_point(27.2, -48.166, {.max_voltage = 7});
+    assembly.set_goal_state(Assembly::GoalState::LongGoal);
+    wait(2, sec);
+    assembly.set_goal_state(Assembly::GoalState::BallLock);
+    assembly.matchLoaderPiston.open();
+    chassis.turn_to_point(56, -47.7, {.angle_offset = 180});
+    chassis.drive_to_point(56, -47.7, {.max_voltage = 5.5, .timeout = 3000});
+    wait(2, sec);
+    chassis.turn_to_point(25.191, -48.166);
+    chassis.drive_to_point(25.191, -48.166, {.max_voltage = 7});
+    assembly.set_goal_state(Assembly::GoalState::LongGoal);
+    wait(2, sec);
+    assembly.set_goal_state(Assembly::GoalState::BallLock);
+    chassis.turn_to_point(42.439, -49.118, {.angle_offset = 180});
+    chassis.drive_to_point(42.439, -49.118, {.max_voltage = 7});
+    chassis.turn_to_point(36.9, 45.67, {.angle_offset = 180});
+    chassis.drive_to_point(36.9, 45.67, {.max_voltage = 10});
+
+
+
+
+
+
+
 
     return "";
 }
